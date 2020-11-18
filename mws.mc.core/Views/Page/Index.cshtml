@@ -1,0 +1,29 @@
+﻿@model PageRowsModel;
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<script>
+    (function(self, $){
+        self.InitComponent = function(componentId, controller){
+            $.get('/'+controller, {id : 1}, function(content){
+                    $('#'+componentId).html(content);
+            });
+        }
+    })((function() {
+        mws_mc.PageRows = mws_mc.PageRows || {};
+        return mws_mc.PageRows;
+    })(), jQuery);
+</script>
+
+<div class="row">
+    @{
+        foreach (var Component in Model.Components)
+        {
+            <div class="col" id="@Component.Id"></div>
+            <script>mws_mc.PageRows.InitComponent('@Component.Id', '@Component.Controller')</script>
+        }
+    }
+</div>
+
+

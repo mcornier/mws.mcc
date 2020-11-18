@@ -7,20 +7,21 @@ Systeme de sites web modulaire en .Net Core MVC.
 Notes
 ----------
 
-Les modules implémentent des composents pouvant être integrer dans des pages définies par l'administrateur du site déployé.
+Les modules implémentent des composents pouvant être integré dans des pages définies par l'administrateur du site déployé.
 Les modules sont dans ~/Modules
 Chaques modules gère lui même ses données.
 Au démarage du module, le coeur donne en données de démarrage "Type de connexion BDD", "ConnexionString", "Version du coeur" (et plus à l'avenir)
 
 Le nommage des modules MWS.MC est le suivant :
-  mws.[devname].[modulename] un composant bar créé par foo sera nommé mws.foo.bar
-
+  mws.[devname].[modulename]
+  un composant "bar" créé par "foo" sera nommé mws.foo.bar
+  Les projets de déclaration de communications doivent avoir la nommage mws.com.[devname].[modulename]
 
 ----------
 Licence
 ----------
 
-Projet mws.core en sources fermées.
+Projet mws.mc.core en sources fermées.
 Modules selon les besoins
 
 
@@ -52,21 +53,22 @@ Opbjectifs
     Implémenter le moteur MWS avec 
           - Gestion du type de rendu des composants : Empty, Card, Modal, Page (P5)
 
-	        Empty           Card               Modal                Page
-                                                              _______________________
-			Title           +----------+       +-------------+      |Site_Menu_________Log|
-			                | Title    |       | Title      X|			"""""""""""""""""""""""                         
-			*A              +----------+       +-------------+		  | 	|            |    |
-			AaaBbb          | *A       |       | *A          |      | 	| Title      |    |
-			                | AaaBbb   |       | AaaBbb      |      |	  |            |    |
-			*B              |          |       |             |      | 	| *A         |    |
-			AaaBbb          | *B       |       | *B          |      | 	| AaaBbb     |    |
-			                | AaaBbb   |       | AaaBbb      |      |	  |            |    |
-                      +----------+       +-------------+      | 	| *B         |    |
-                                         |      [Close]|      |	  | AaaBbb     |    |
-                                         +-------------+      |	  |____________|    |
-																                              |	                    |
-
+            Empty           Card               Modal                Page
+                                                                    ______________________
+            Title           +----------+       +-------------+      |Site_Menu________Log|
+                            | Title    |       | Title      X|      """"""""""""""""""""""                          
+            *A              +----------+       +-------------+      |   |            |   |
+            AaaBbb          | *A       |       | *A          |      |   | Title      |   |
+                            | AaaBbb   |       | AaaBbb      |      |   |            |   |
+            *B              |          |       |             |      |   | *A         |   |
+            AaaBbb          | *B       |       | *B          |      |   | AaaBbb     |   |
+                            | AaaBbb   |       | AaaBbb      |      |   |            |   |
+                            +----------+       +-------------+      |   | *B         |   |
+                                               |      [Close]|      |   | AaaBbb     |   |
+                                               +-------------+      |   |____________|   |
+                                                                    |                    |
+          - Systeme de communication inter composants (et donc intermodules) (p10)
+																	
 4 - Module Articles [mws.mc.article]
     Module d'affichage d'articles
           - Base de données mws.mc.article*
@@ -75,7 +77,6 @@ Opbjectifs
           - Composant d'affichage des articles en vue table (P6)
           - Composant de recherche d'articles (P7)
           - Gestion des Rôles (P8)
-          - Systeme de communication inter composants (et donc intermodules) (p10)
           
 5 - Module de Gestion d'Articles [mws.mc.articlemanager]
           - Composant de saisie d'article (P4)
@@ -87,6 +88,7 @@ Opbjectifs
           - Composant de gestion des commentaires (p9)
 
 7- Module de pièces jointes [mws.mc.attachment]
+          - Base de données mws.mc.attachment (p9)
           - Composant d'import de pièeces jointes (p9)
           - Composant d'affichage de pièce jointes (p9)
 

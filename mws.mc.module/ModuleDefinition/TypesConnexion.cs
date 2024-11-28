@@ -1,13 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace mws.mc.module;
 
-namespace mws.mc.module
+/// <summary>
+/// Defines the supported database connection types
+/// </summary>
+public enum TypesConnexion
 {
-    public enum TypesConnexion
-    {
-        sqlite = 1,
-        sqlserver = 2,
-        mysql = 3
-    }
+    /// <summary>
+    /// No connection type specified
+    /// </summary>
+    None = 0,
+
+    /// <summary>
+    /// SQLite database connection
+    /// </summary>
+    Sqlite = 1,
+
+    /// <summary>
+    /// SQL Server database connection
+    /// </summary>
+    SqlServer = 2,
+
+    /// <summary>
+    /// MySQL database connection
+    /// </summary>
+    MySql = 3
 }

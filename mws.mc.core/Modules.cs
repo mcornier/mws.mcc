@@ -1,61 +1,66 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using System.IO;
-using System.Collections;
 using mws.mc.module;
+using System.Reflection;
 
-namespace mws.mc.core
+namespace mws.mc.core;
+
+public static class Modules
 {
-    public static class Modules
+    public static IEnumerable<Assembly> LoadAssembliesWithControllers(IServiceCollection services)
     {
-        public static IEnumerable<Assembly> LoadAssembliesWithControllers(IServiceCollection services)
+        var assemblies = new List<Assembly>();
+
+        // Get the modules directory path
+        string appRoot = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) 
+            ?? throw new InvalidOperationException("Unable to determine application root directory");
+        string modulesPath = Path.Join(appRoot, "modules");
+
+        if (Directory.Exists(modulesPath))
         {
-            List<Assembly> assemblies = new List<Assembly>();
-
-            // Todo : check in module folder and load
-            string appRoot = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-            string modulesPath = Path.Combine(appRoot, "modules");
-            if(Directory.Exists(modulesPath))
+            // Load all DLL files from the modules directory
+            var fileEntries = Directory.GetFiles(modulesPath, "*.dll");
+            foreach (string fileName in fileEntries)
             {
-                string [] fileEntries = Directory.GetFiles(modulesPath, "*.dll");
-                foreach(string fileName in fileEntries)
+                try
                 {
-                    Assembly moduleAssembly = Assembly.LoadFile(fileName);
-
-                    if(fileName.Contains(".Views.dll"))
-                    {
-                        var a = moduleAssembly.FullName;
-                    }
-
+                    var moduleAssembly = Assembly.LoadFile(fileName);
                     assemblies.Add(moduleAssembly);
                 }
+                catch (Exception ex)
+                {
+                    // Log or handle the assembly loading error
+                    Console.WriteLine($"Error loading module assembly {fileName}: {ex.Message}");
+                }
             }
-
-            foreach(Assembly assembly in assemblies)
-            {
-                InitializeModule(services, assembly);
-            }
-
-            return assemblies;
         }
 
-        private static void InitializeModule(IServiceCollection services, Assembly assembly)
+        // Initialize each loaded module
+        foreach (var assembly in assemblies)
         {
-            foreach (Type type in assembly.GetTypes())
-            {
-                if (typeof(IMwsModuleStartup).IsAssignableFrom(type))
-                {
-                    IMwsModuleStartup startup = Activator.CreateInstance(type) as IMwsModuleStartup;
+            InitializeModule(services, assembly);
+        }
 
-                    if(startup != null)
-                    {
-                        startup.Start(services, new MwsModuleSettings());
-                    }
+        return assemblies;
+    }
+
+    private static void InitializeModule(IServiceCollection services, Assembly assembly)
+    {
+        var moduleTypes = assembly.GetTypes()
+            .Where(type => !type.IsAbstract && typeof(IMwsModuleStartup).IsAssignableFrom(type));
+
+        foreach (var type in moduleTypes)
+        {
+            try
+            {
+                if (Activator.CreateInstance(type) is IMwsModuleStartup startup)
+                {
+                    startup.Start(services, new MwsModuleSettings());
                 }
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the module initialization error
+                Console.WriteLine($"Error initializing module {type.FullName}: {ex.Message}");
             }
         }
     }

@@ -1,19 +1,23 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace mws.mc.module
+namespace mws.mc.module;
+
+public interface IMwsModuleStartup
 {
-    public interface IMwsModuleStartup
-    {
-        Task Start(IServiceCollection services, MwsModuleSettings settings);
+    /// <summary>
+    /// Initializes the module with the provided services and settings
+    /// </summary>
+    /// <param name="services">The service collection to configure</param>
+    /// <param name="settings">The module settings</param>
+    Task Start(IServiceCollection services, MwsModuleSettings settings);
 
-        MwsModuleSettings Settings { get; }
+    /// <summary>
+    /// Gets the current module settings
+    /// </summary>
+    MwsModuleSettings Settings { get; }
 
-        IMwsModuleStartup Instance => throw new NotImplementedException();
-
-        MwsModule MwsModule { get; }
-    }
+    /// <summary>
+    /// Gets the associated MWS module
+    /// </summary>
+    MwsModule MwsModule { get; }
 }
